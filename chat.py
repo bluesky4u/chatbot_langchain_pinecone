@@ -6,18 +6,20 @@ from langchain.llms import OpenAI
 from langchain.chains.question_answering import load_qa_chain
 from langchain.agents import initialize_agent, Tool, load_tools
 from langchain.chains.conversation.memory import ConversationBufferMemory
-OPENAI_API_KEY = "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"
-PINECONE_API_KEY = '64a2192e-42ae-466b-a79c-b9e0a2e73d87'
-PINECONE_API_ENV = 'us-east1-gcp'
-#for v2
 import openai
 import os
+import dotenv
+
+OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')
+PINECONE_API_KEY = os.environ.get('PINECONE_API_KEY')
+PINECONE_API_ENV = os.environ.get('PINECONE_API_ENV')
+#for v2
 
 openai.api_key = OPENAI_API_KEY
 embed_model = "text-embedding-ada-002"
 
 os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY
-os.environ["SERPAPI_API_KEY"] = '250c2b69b7f093573fac2c9eba23e5a7d07d4a9bd2e747b258fec3caff47122e'
+os.environ["SERPAPI_API_KEY"] = os.environ.get('SERPAPI_API_KEY')
 
 llm=OpenAI(temperature=0, verbose=True)
 

@@ -58,3 +58,4 @@ pinecone-client==2.2.1
   - tqdm [required: >=4.64.1, installed: 4.65.0]
   - typing-extensions [required: >=3.7.4, installed: 3.10.0.2]
   - urllib3 [required: >=1.21.1, installed: 1.26.9]
+python-dotenv
