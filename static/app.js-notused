@@ -1,0 +1,105 @@
+// Define a class called Chatbox
+class Chatbox {
+    constructor() {
+        // Define an object called args with three properties
+        this.args = {
+            openButton: document.querySelector('.chatbox__button'), // Element for opening the chatbox
+            chatBox: document.querySelector('.chatbox__support'), // Chatbox element
+            sendButton: document.querySelector('.send__button') // Element for sending a message
+        }
+
+        // Define initial state for chatbox
+        this.state = false;
+        this.messages = [{ name: "Sam", message: "Hello, how can I help you?" }]; // Initialize an empty array to store messages
+
+    }
+
+    // Attach event listeners to the chatbox elements
+    display() {
+        const {openButton, chatBox, sendButton} = this.args;
+        // Listen for clicks on the open button
+        openButton.addEventListener('click', () => this.toggleState(chatBox))
+        // Listen for clicks on the send button
+        sendButton.addEventListener('click', () => this.onSendButton(chatBox))
+        // Listen for the Enter key to be pressed while the input field is focused
+        const node = chatBox.querySelector('input');
+        node.addEventListener("keyup", ({key}) => {
+            if (key === "Enter") {
+                this.onSendButton(chatBox)
+            }
+        })
+    }
+
+    // Toggles the visibility of the chatbox
+    toggleState(chatbox) {
+        this.state = !this.state;
+        // show or hide the box depending on the state
+        if(this.state) {
+            chatbox.classList.add('chatbox--active')
+        } else {
+            chatbox.classList.remove('chatbox--active')
+        }
+    }
+
+    // Handles sending a message to the chatbox
+    onSendButton(chatbox) {
+        var textField = chatbox.querySelector('input');
+        let text1 = textField.value;
+        if (text1 === "") {
+            return;
+        }
+        textField.value="";
+        // Define a message object with a name and message property and add it to the messages array
+        let msg1 = { name: "User", message: text1 }
+        this.messages.push(msg1);
+        // Send the message to the server for processing
+        fetch($SCRIPT_ROOT+ '/predict',  {
+            method: 'POST',
+            body: JSON.stringify({ message: text1 }),
+            mode: 'cors',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+          })
+          .then(r => r.json())
+          .then(r => {
+            // Define a response message object with a name and message property and add it to the messages array
+            let msg2 = { name: "Sam", message: r.answer };
+            this.messages.push(msg2);
+
+            // Update the chat text and clear the input field
+            this.updateChatText(chatbox);
+            textField.value = '';
+        }).catch((error) => {
+            console.error('Error:', error);
+            // Update the chat text and clear the input field
+            this.updateChatText(chatbox);
+            textField.value = '';
+          });
+    }
+
+    // Updates the chat text with the latest messages.  need to split this in 2..
+    updateChatText(chatbox) {
+        var html = '';
+        // Loop through the messages array in reverse order and add them to the chat text
+        this.messages.slice().reverse().forEach(function(item, index) {
+            if (item.name === "Sam")
+            {
+                html += '<div class="messages__item messages__item--visitor">' + item.message + '</div>'
+            }
+            else
+            {
+                html += '<div class="messages__item messages__item--operator">' + item.message + '</div>'
+            }
+          });
+          // Select the chatbox messages element
+          const chatmessage = chatbox.querySelector('.chatbox__messages');
+          // Update the chatbox messages with the latest messages
+          chatmessage.innerHTML = html;
+      }
+  }
+  
+  // Create a new instance of the Chatbox class
+  const chatbox = new Chatbox();
+  // Call the display method to initialize the chatbox and start listening for user input
+  chatbox.display();
