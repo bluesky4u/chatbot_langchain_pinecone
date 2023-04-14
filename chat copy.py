@@ -4,10 +4,9 @@ from langchain.embeddings import OpenAIEmbeddings
 from langchain.llms import OpenAI
 from langchain.chains.question_answering import load_qa_chain
 
-OPENAI_API_KEY = "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"
-PINECONE_API_KEY = '64a2192e-42ae-466b-a79c-b9e0a2e73d87'
-PINECONE_API_ENV = 'us-east1-gcp'
-
+OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')
+PINECONE_API_KEY = os.environ.get('PINECONE_API_KEY')
+PINECONE_API_ENV = os.environ.get('PINECONE_API_ENV')
 
 #for v2
 import openai

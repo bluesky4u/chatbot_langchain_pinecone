@@ -1,7 +1,9 @@
 import os
 import datetime
 from get_filings.admin_stuff import extract_filings, combine_filings, upload
+import dotenv
 
+dotenv.load_dotenv()
 ticker = input("Ticker (LOWERCASE ONLY): ")
 start_date = input("Start date (YYYY-MM-DD) or 'today': ")
 
@@ -20,10 +22,10 @@ while True:
 
 amount = input("Amount of filings per filing type: ")
 
-SEC_API_KEY = "5c7fdaf04888df062770427f16fe8f1b7e3d6c7265e685cda696d24500c3de06"
-OPENAI_API_KEY = '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'
-PINECONE_API_KEY = '64a2192e-42ae-466b-a79c-b9e0a2e73d87'
-PINECONE_API_ENV = 'us-east1-gcp'
+SEC_API_KEY = os.environ.get('SERPAPI_API_KEY')
+OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')
+PINECONE_API_KEY = os.environ.get('PINECONE_API_KEY')
+PINECONE_API_ENV = os.environ.get('PINECONE_API_ENV')
 
 extract_filings(ticker, SEC_API_KEY, amount, start_date, end_date)
 combine_filings(ticker)
